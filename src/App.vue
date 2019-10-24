@@ -1,28 +1,40 @@
-<template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+<template lang="html">
+  <GChart
+  type="PieChart"
+  :data="generationMix"
+  :options="chartOptions"
+  />
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { GChart } from 'vue-google-charts'
+
 
 export default {
-  name: 'app',
+  data () {
+    return {
+      // Array will be automatically processed with visualization.arrayToDataTable function
+      generationMix: [
+        ['Fuel', 'Percentage'],
+        ['Nuclear', 20.4],
+        ['Hydro', 18.9],
+        ['Coal', 20.1],
+        ['Gas', 13.9]
+      ],
+      chartOptions: {
+        chart: {
+          title: 'Company Performance',
+          subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+        }
+      }
+    }
+  },
+
   components: {
-    HelloWorld
+    GChart
   }
 }
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="css" scoped>
 </style>
