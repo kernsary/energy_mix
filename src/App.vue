@@ -1,25 +1,21 @@
 <template lang="html">
-  <GChart
-  type="PieChart"
-  :data="generationMix"
-  :options="chartOptions"
-  />
+  <div class="">
+    <h1>Energy Mix</h1>
+    <h2>In the last half-hour</h2>
+    <chart :energyMix="energyMix"></chart>
+  </div>
 </template>
 
 <script>
-import { GChart } from 'vue-google-charts'
-
+import Chart from './components/Chart.vue'
 
 export default {
-  data () {
+  data() {
     return {
-      // Array will be automatically processed with visualization.arrayToDataTable function
-      generationMix: [
-        ['Fuel', 'Percentage'],
-        ['Nuclear', 20.4],
-        ['Hydro', 18.9],
-        ['Coal', 20.1],
-        ['Gas', 13.9]
+startTime: "",
+
+      energyMix: [
+        ["Fuel", "Percentage"]
       ],
       chartOptions: {
         chart: {
@@ -29,12 +25,31 @@ export default {
       }
     }
   },
+  methods: {
+    fetchData(){
+      fetch('https://api.carbonintensity.org.uk/generation')
+      .then(res => res.json())
+      .then((responseData) => {
+        this.transformData(responseData.data.generationmix);
 
-  components: {
-    GChart
+       })
+      },
+
+      transformData(arr) {
+        for (var i = 0; i < arr.length; i++) {
+          const sub_array = [arr[i].fuel, arr[i].perc];
+          this.energyMix.push(sub_array);
+        }
+      }
+    },
+    components: {
+      "chart": Chart
+    },
+    mounted(){
+      this.fetchData();
+    }
   }
-}
-</script>
+  </script>
 
-<style lang="css" scoped>
-</style>
+  <style lang="css" scoped>
+  </style>
