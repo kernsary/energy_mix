@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="">
     <h1>Energy Mix</h1>
-    <h2>In the last half-hour</h2>
+    <p>from {{startTime}} to {{endTime}}</p>
     <chart :energyMix="energyMix"></chart>
   </div>
 </template>
@@ -12,8 +12,8 @@ import Chart from './components/Chart.vue'
 export default {
   data() {
     return {
-startTime: "",
-
+      startTime: "",
+      endTime: "",
       energyMix: [
         ["Fuel", "Percentage"]
       ],
@@ -31,25 +31,26 @@ startTime: "",
       .then(res => res.json())
       .then((responseData) => {
         this.transformData(responseData.data.generationmix);
+        this.startTime = responseData.data.from;
+        this.endTime = responseData.data.to
+      })
+    },
 
-       })
-      },
-
-      transformData(arr) {
-        for (var i = 0; i < arr.length; i++) {
-          const sub_array = [arr[i].fuel, arr[i].perc];
-          this.energyMix.push(sub_array);
-        }
+    transformData(arr) {
+      for (var i = 0; i < arr.length; i++) {
+        const sub_array = [arr[i].fuel, arr[i].perc];
+        this.energyMix.push(sub_array);
       }
-    },
-    components: {
-      "chart": Chart
-    },
-    mounted(){
-      this.fetchData();
     }
+  },
+  components: {
+    "chart": Chart
+  },
+  mounted(){
+    this.fetchData();
   }
-  </script>
+}
+</script>
 
-  <style lang="css" scoped>
-  </style>
+<style lang="css" scoped>
+</style>
